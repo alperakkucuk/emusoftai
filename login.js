@@ -30,7 +30,7 @@ document.getElementById('login-button').addEventListener('click', () => {
                 localStorage.removeItem('rememberedEmail');
             }
             // Redirect to dashboard
-            window.location.href = 'm/dashboard/index.html'; // Yönlendirme yolunu güncelle
+            window.location.href = '../dashboard/index.html'; // Yönlendirme yolunu güncelle
         })
         .catch((error) => {
             console.error('Error signing in:', error.message);
