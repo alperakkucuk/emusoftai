@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Selector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .device-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .device-box, .add-device-box {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid black;
+            margin: 0 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            position: relative;
+        }
+        .add-device-box {
+            background-color: #ddd;
+            font-size: 3em;
+            color: #666;
+        }
+        .add-device-box::before {
+            content: "+";
+        }
+        .logout-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .device-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+        }
+        .device-dropdown div {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .device-dropdown div:hover {
+            background-color: #f0f0f0;
+        }
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="device-container" id="device-container">
+        <div class="add-device-box" id="add-device-box"></div>
+    </div>
+    <button class="logout-button" id="logout-button">Logout</button>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAkC7nqYjAiU8eDfgHF9UoIlEpTZr3SXMc",
+            authDomain: "mikroauth-48466.firebaseapp.com",
+            databaseURL: "https://mikroauth-48466-default-rtdb.firebaseio.com/",
+            projectId: "mikroauth-48466",
+            storageBucket: "mikroauth-48466.appspot.com",
+            messagingSenderId: "94496869016",
+            appId: "1:94496869016:web:759c386b7e5c70e3a2deed"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+        var availableDevices = [
+            { name: 'cihaz1', url: 'cihaz1.html', userEmail: 'satoksoz@gmail.com' },
+            { name: 'cihaz2', url: 'cihaz2.html', userEmail: 'alperakkucuk@gmail.com' }
+        ];
+
+        function sanitizeEmail(email) {
+            return email.replace(/\./g, ',');
+        }
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                loadDevices(user.uid);
+            } else {
+                window.location.href = '../'; // Update this path to your login page
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', function() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = '../'; // Update this path to your login page
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        });
+
+        document.getElementById('add-device-box').addEventListener('click', function() {
+            var dropdown = document.createElement('div');
+            dropdown.classList.add('device-dropdown');
+            var user = firebase.auth().currentUser;
+            if (user) {
+                var userId = user.uid;
+                var userEmail = user.email;
+                var sanitizedUserEmail = sanitizeEmail(userEmail);
+                var userDevicesRef = database.ref('users/' + userId + '/devices');
+                userDevicesRef.once('value').then((snapshot) => {
+                    var addedDevices = [];
+                    snapshot.forEach((childSnapshot) => {
+                        addedDevices.push(childSnapshot.val().name);
+                    });
+                    availableDevices.forEach(device => {
+                        var deviceAuthEmailsRef = database.ref('devices/' + device.name + '/authorizedEmails');
+                        deviceAuthEmailsRef.once('value').then((emailSnapshot) => {
+                            var authorizedEmails = emailSnapshot.val() || {};
+                            if (!addedDevices.includes(device.name) && (device.userEmail === userEmail || authorizedEmails[sanitizedUserEmail])) {
+                                var deviceOption = document.createElement('div');
+                                deviceOption.innerHTML = device.name;
+                                deviceOption.onclick = function() {
+                                    addDevice(device.url, device.name);
+                                    dropdown.style.display = 'none';
+                                };
+                                dropdown.appendChild(deviceOption);
+                            }
+                        });
+                    });
+                    setTimeout(function() {
+                        if (dropdown.childElementCount > 0) {
+                            document.getElementById('add-device-box').appendChild(dropdown);
+                            dropdown.style.display = 'flex';
+                        } else {
+                            alert('All devices added or no devices available for your email');
+                        }
+                    }, 500); // Add a slight delay to ensure all async operations complete
+                });
+            }
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.add-device-box')) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+
+        function addDevice(url, name) {
+            var user = firebase.auth().currentUser;
+            if (user) {
+                var userId = user.uid;
+                var deviceRef = database.ref('users/' + userId + '/devices/' + name);
+
+                deviceRef.once('value').then((snapshot) => {
+                    if (!snapshot.exists()) {
+                        deviceRef.set({
+                            name: name,
+                            url: url
+                        }).then(() => {
+                            createDeviceBox(url, name);
+                        });
+                    } else {
+                        alert('Device already added.');
+                    }
+                }).catch((error) => {
+                    console.error("Error adding device: ", error);
+                });
+            }
+        }
+
+        function createDeviceBox(url, name) {
+            var deviceContainer = document.getElementById('device-container');
+            var deviceBox = document.createElement('div');
+            deviceBox.classList.add('device-box');
+            deviceBox.innerHTML = name;
+            deviceBox.onclick = function() {
+                location.href = url;
+            };
+            var deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.innerHTML = 'x';
+            deleteButton.onclick = function(event) {
+                event.stopPropagation();
+                deleteDevice(name);
+            };
+            deviceBox.appendChild(deleteButton);
+            deviceContainer.insertBefore(deviceBox, deviceContainer.firstChild); // Sol tarafa ekler
+            deviceContainer.insertBefore(document.getElementById('add-device-box'), deviceContainer.firstChild); // Add-device-box her zaman en solda kalır
+        }
+
+        function deleteDevice(name) {
+            var user = firebase.auth().currentUser;
+            if (user) {
+                var userId = user.uid;
+                var deviceRef = database.ref('users/' + userId + '/devices/' + name);
+
+                deviceRef.remove().then(() => {
+                    var deviceContainer = document.getElementById('device-container');
+                    var deviceBoxes = deviceContainer.getElementsByClassName('device-box');
+                    for (var i = 0; i < deviceBoxes.length; i++) {
+                        if (deviceBoxes[i].innerText.includes(name)) {
+                            deviceContainer.removeChild(deviceBoxes[i]);
+                            break;
+                        }
+                    }
+                }).catch((error) => {
+                    console.error("Error removing device: ", error);
+                });
+            }
+        }
+
+        function loadDevices(userId) {
+            var deviceContainer = document.getElementById('device-container');
+            database.ref('users/' + userId + '/devices').once('value').then((snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    var deviceData = childSnapshot.val();
+                    createDeviceBox(deviceData.url, deviceData.name);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

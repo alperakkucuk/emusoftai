@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Data Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #7a7a7a;
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 90px 10px #4b4b4b56;
+        }
+        .output {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .notification {
+            margin-top: 20px;
+            font-size: 1em;
+            color: green;
+        }
+        .toggle-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 5px;
+        }
+        .state-display {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
+        }
+        .logout-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .email-container {
+            margin-top: 20px;
+        }
+        .email-input {
+            padding: 10px;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        .add-email-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .email-list {
+            margin-top: 10px;
+            text-align: left;
+        }
+        .email-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .email-item span {
+            margin-right: 10px;
+        }
+        .remove-email-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Device Data Display</h1>
+        <div class="output" id="response-output">Waiting for data...</div>
+        
+        <h1>Cihaz Kontrol</h1>
+        <form id="control-form">
+            <div>
+                <input type="button" class="toggle-button" id="toggle-button-role1" value="Role1 Off">
+                <div class="state-display" id="state-display-role1">Current State: Off</div>
+            </div>
+            <div>
+                <input type="button" class="toggle-button" id="toggle-button-role2" value="Role2 Off">
+                <div class="state-display" id="state-display-role2">Current State: Off</div>
+            </div>
+            <div>
+                <input type="button" class="toggle-button" id="toggle-button-role3" value="Role3 Off">
+                <div class="state-display" id="state-display-role3">Current State: Off</div>
+            </div>
+            <div>
+                <input type="button" class="toggle-button" id="toggle-button-role4" value="Role4 Off">
+                <div class="state-display" id="state-display-role4">Current State: Off</div>
+            </div>
+        </form>
+        <div class="notification" id="notification"></div>
+
+        <div class="email-container" id="email-container" style="display: none;">
+            <h2>Add Authorized Email</h2>
+            <input type="email" class="email-input" id="email-input" placeholder="Enter email" required>
+            <button class="add-email-button" id="add-email-button">Add Email</button>
+            <div class="email-list" id="email-list"></div>
+        </div>
+
+        <button class="logout-button" id="logout-button" onclick="location.href='index.html'">Return</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAkC7nqYjAiU8eDfgHF9UoIlEpTZr3SXMc",
+            authDomain: "mikroauth-48466.firebaseapp.com",
+            projectId: "mikroauth-48466",
+            storageBucket: "mikroauth-48466.appspot.com",
+            messagingSenderId: "94496869016",
+            appId: "1:94496869016:web:759c386b7e5c70e3a2deed"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Function to sanitize email
+        function sanitizeEmail(email) {
+            return email.replace(/\./g, ',');
+        }
+
+        // Check if user is authenticated and authorized
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                authorizeUser(user.email);
+            } else {
+                window.location.href = '../'; // Redirect to login page
+            }
+        });
+
+        function authorizeUser(email) {
+            var authorizedEmailsRef = firebase.database().ref('devices/cihaz2/authorizedEmails');
+            authorizedEmailsRef.once('value', function(snapshot) {
+                var authorizedEmails = snapshot.val() || {};
+                if (authorizedEmails[sanitizeEmail(email)] || email === 'alperakkucuk@gmail.com') {
+                    initializePage(email);
+                } else {
+                    alert('You are not authorized to view this page.');
+                    window.location.href = '../dashboard'; // Redirect to login page
+                }
+            });
+        }
+
+        function initializePage(email) {
+            document.getElementById('logout-button').addEventListener('click', function() {
+                firebase.auth().signOut().then(() => {
+                    window.location.href = '../dashboard/index.html'; // Update this path to your login page
+                }).catch((error) => {
+                    console.error('Error signing out:', error);
+                });
+            });
+
+            let userEmail = "alperakkucuk@gmail.com";
+            let currentStates = {
+                role1: 'off',
+                role2: 'off',
+                role3: 'off',
+                role4: 'off'
+            };
+
+            function fetchData() {
+                fetch('../phpfiles/get-data2.php')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('response-output').innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            function sendDeviceState(role, state) {
+                fetch('../control-device2.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `role=${role}&state=${state}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('notification').innerText = `${role} ${state === 'on' ? 'açıldı' : 'kapandı'}: ${data}`;
+                    currentStates[role] = state;
+                    updateButtonLabel(role);
+                    updateStateDisplay(role);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            function updateButtonLabel(role) {
+                const button = document.getElementById(`toggle-button-${role}`);
+                if (currentStates[role] === 'on') {
+                    button.value = `${role} On`;
+                } else {
+                    button.value = `${role} Off`;
+                }
+            }
+
+            function updateStateDisplay(role) {
+                const display = document.getElementById(`state-display-${role}`);
+                display.innerText = `Current State: ${currentStates[role] === 'on' ? 'On' : 'Off'}`;
+            }
+
+            document.getElementById('toggle-button-role1').addEventListener('click', () => {
+                const newState = currentStates.role1 === 'on' ? 'off' : 'on';
+                sendDeviceState('role1', newState);
+            });
+
+            document.getElementById('toggle-button-role2').addEventListener('click', () => {
+                const newState = currentStates.role2 === 'on' ? 'off' : 'on';
+                sendDeviceState('role2', newState);
+            });
+
+            document.getElementById('toggle-button-role3').addEventListener('click', () => {
+                const newState = currentStates.role3 === 'on' ? 'off' : 'on';
+                sendDeviceState('role3', newState);
+            });
+
+            document.getElementById('toggle-button-role4').addEventListener('click', () => {
+                const newState = currentStates.role4 === 'on' ? 'off' : 'on';
+                sendDeviceState('role4', newState);
+            });
+
+            function initializeStates() {
+                fetch('../phpfiles/get-roles-state2.php')
+                .then(response => response.json())
+                .then(data => {
+                    currentStates = data;
+                    Object.keys(currentStates).forEach(role => {
+                        updateButtonLabel(role);
+                        updateStateDisplay(role);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            setInterval(fetchData, 1000); // 1 saniyede bir veriyi çek
+            initializeStates();
+
+            if (email === 'alperakkucuk@gmail.com') {
+                document.getElementById('email-container').style.display = 'block';
+                loadAuthorizedEmails();
+            }
+        }
+
+        function loadAuthorizedEmails() {
+            var authorizedEmailsRef = firebase.database().ref('devices/cihaz2/authorizedEmails');
+            authorizedEmailsRef.once('value', function(snapshot) {
+                var emails = snapshot.val() || {};
+                var emailList = document.getElementById('email-list');
+                emailList.innerHTML = '';
+                for (var email in emails) {
+                    addEmailToList(email.replace(/,/g, '.'));
+                }
+            });
+        }
+
+        document.getElementById('add-email-button').addEventListener('click', function() {
+            var emailInput = document.getElementById('email-input');
+            var email = emailInput.value.trim();
+            if (email) {
+                var authorizedEmailsRef = firebase.database().ref('devices/cihaz2/authorizedEmails');
+                authorizedEmailsRef.child(sanitizeEmail(email)).set(true).then(() => {
+                    addEmailToList(email);
+                    emailInput.value = '';
+                }).catch((error) => {
+                    console.error("Error adding email: ", error);
+                });
+            }
+        });
+
+        function addEmailToList(email) {
+            var emailList = document.getElementById('email-list');
+            var emailItem = document.createElement('div');
+            emailItem.classList.add('email-item');
+            var emailSpan = document.createElement('span');
+            emailSpan.innerText = email;
+            var removeButton = document.createElement('button');
+            removeButton.classList.add('remove-email-button');
+            removeButton.innerText = 'Remove';
+            removeButton.addEventListener('click', function() {
+                removeEmail(email);
+            });
+            emailItem.appendChild(emailSpan);
+            emailItem.appendChild(removeButton);
+            emailList.appendChild(emailItem);
+        }
+
+        function removeEmail(email) {
+            var authorizedEmailsRef = firebase.database().ref('devices/cihaz2/authorizedEmails');
+            authorizedEmailsRef.child(sanitizeEmail(email)).remove().then(() => {
+                var emailList = document.getElementById('email-list');
+                var emailItems = emailList.getElementsByClassName('email-item');
+                for (var i = 0; i < emailItems.length; i++) {
+                    if (emailItems[i].innerText.includes(email)) {
+                        emailList.removeChild(emailItems[i]);
+                        break;
+                    }
+                }
+            }).catch((error) => {
+                console.error("Error removing email: ", error);
+            });
+        }
+    </script>
+</body>
+</html>
