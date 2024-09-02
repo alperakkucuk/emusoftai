@@ -1,21 +1,54 @@
-const countdown = () => {
-    const targetDate = new Date("2024-09-08T11:00:00").getTime();
-    const now = new Date().getTime();
-    const distance = targetDate - now;
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #282c34;
+    color: #61dafb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
 
-    document.getElementById("days").innerText = days;
-    document.getElementById("hours").innerText = hours;
-    document.getElementById("minutes").innerText = minutes;
-    document.getElementById("seconds").innerText = seconds;
+.container {
+    text-align: center;
+    z-index: 10;
+}
 
-    if (distance < 0) {
-        document.getElementById("countdown").innerHTML = "Time's Up!";
-    }
-};
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
 
-setInterval(countdown, 1000);
+.countdown {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.time-box {
+    background: #20232a;
+    border: 2px solid #61dafb;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100px;
+}
+
+.time {
+    font-size: 2rem;
+    display: block;
+}
+
+.label {
+    font-size: 1rem;
+    color: #a9b3c1;
+}
