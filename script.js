@@ -1,54 +1,103 @@
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #282c34;
-    color: #61dafb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
+// Countdown Timer
+const countdown = () => {
+    const targetDate = new Date("2024-09-08T11:00:00").getTime();
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("days").innerText = days;
+    document.getElementById("hours").innerText = hours;
+    document.getElementById("minutes").innerText = minutes;
+    document.getElementById("seconds").innerText = seconds;
+
+    if (distance < 0) {
+        document.getElementById("countdown").innerHTML = "Time's Up!";
+    }
+};
+
+setInterval(countdown, 1000);
+
+// Floating Bubbles Background
+const canvas = document.getElementById('backgroundCanvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const bubbles = [];
+
+class Bubble {
+    constructor(x, y, radius, color, speed) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.speed = speed;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    update() {
+        this.x += this.speed.x;
+        this.y += this.speed.y;
+
+        if (this.x - this.radius > canvas.width || this.x + this.radius < 0) {
+            this.speed.x = -this.speed.x;
+        }
+
+        if (this.y - this.radius > canvas.height || this.y + this.radius < 0) {
+            this.speed.y = -this.speed.y;
+        }
+    }
 }
 
-#backgroundCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
+const generateBubbles = (x, y) => {
+    const colors = ['#61dafb', '#f05454', '#c6f1d6', '#f3c583'];
+    const radius = Math.random() * 10 + 5;
+    const speed = {
+        x: (Math.random() - 0.5) * 2,
+        y: (Math.random() - 0.5) * 2,
+    };
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    bubbles.push(new Bubble(x, y, radius, color, speed));
+};
 
-.container {
-    text-align: center;
-    z-index: 10;
-}
+canvas.addEventListener('mousemove', (e) => {
+    generateBubbles(e.clientX, e.clientY);
+});
 
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-}
+const animate = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    bubbles.forEach((bubble, index) => {
+        bubble.update();
+        bubble.draw();
 
-.countdown {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
+        // Remove bubbles that are off-screen
+        if (
+            bubble.x - bubble.radius > canvas.width ||
+            bubble.x + bubble.radius < 0 ||
+            bubble.y - bubble.radius > canvas.height ||
+            bubble.y + bubble.radius < 0
+        ) {
+            bubbles.splice(index, 1);
+        }
+    });
+    requestAnimationFrame(animate);
+};
 
-.time-box {
-    background: #20232a;
-    border: 2px solid #61dafb;
-    border-radius: 10px;
-    padding: 20px;
-    width: 100px;
-}
+animate();
 
-.time {
-    font-size: 2rem;
-    display: block;
-}
-
-.label {
-    font-size: 1rem;
-    color: #a9b3c1;
-}
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
