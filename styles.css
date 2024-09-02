@@ -46,6 +46,29 @@ h1 {
     }
 }
 
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #00e6e6;
+    color: #121212;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.btn:hover {
+    background: #f0e68c;
+    transform: scale(1.1);
+}
+
 .balloons {
     position: fixed;
     top: 0;
