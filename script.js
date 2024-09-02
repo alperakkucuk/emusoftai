@@ -39,3 +39,14 @@ function updateCountdown() {
 
 setInterval(updateCountdown, 1000);
 updateCountdown();
+
+// Audio control for buttons
+const audioFiles = {
+    alper: new Audio('alper.mp3'),
+    sude: new Audio('sude.mp3'),
+    omer: new Audio('omer.mp3')
+};
+
+document.getElementById('alper').addEventListener('click', () => audioFiles.alper.play());
+document.getElementById('sude').addEventListener('click', () => audioFiles.sude.play());
+document.getElementById('omer').addEventListener('click', () => audioFiles.omer.play());
