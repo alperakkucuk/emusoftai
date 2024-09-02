@@ -104,3 +104,22 @@ h1 {
         transform: translateY(-20px);
     }
 }
+
+
+.small-timer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.small {
+    font-size: 2rem;
+    color: #ff6347; /* Farklı bir renk ile küçük sayaç */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.small-timer h2 {
+    color: #ff6347;
+    margin-bottom: 10px;
+}
+
