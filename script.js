@@ -78,3 +78,35 @@ document.getElementById('omer').addEventListener('click', () => {
     stopAllAudio();
     audioFiles.omer.play();
 });
+
+// İkinci sayaç için eklenen yeni hedef tarih
+const smallCountdownElement = document.getElementById('small-countdown');
+const smallTargetDate = new Date('2024-09-10T11:00:00');
+
+function updateSmallCountdown() {
+    const now = new Date();
+    const timeDiff = smallTargetDate - now;
+
+    if (timeDiff <= 0) {
+        smallCountdownElement.textContent = 'Süre Doldu!';
+        return;
+    }
+
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    smallCountdownElement.textContent = `${days} Gün ${hours} Saat ${minutes} Dakika ${seconds} Saniye`;
+}
+
+setInterval(updateSmallCountdown, 1000);
+updateSmallCountdown();
+
+// Otkar butonu için yeni audio kontrolü
+audioFiles.otkar = new Audio('otkar.mp3');
+
+document.getElementById('otkar').addEventListener('click', () => {
+    stopAllAudio();
+    audioFiles.otkar.play();
+});
