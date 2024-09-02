@@ -81,7 +81,7 @@ document.getElementById('omer').addEventListener('click', () => {
 
 // İkinci sayaç için eklenen yeni hedef tarih
 const smallCountdownElement = document.getElementById('small-countdown');
-const smallTargetDate = new Date('2024-09-10T11:00:00');
+const smallTargetDate = new Date('2024-09-10T23:00:00');
 
 function updateSmallCountdown() {
     const now = new Date();
