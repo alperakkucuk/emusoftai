@@ -47,6 +47,34 @@ const audioFiles = {
     omer: new Audio('omer.mp3')
 };
 
-document.getElementById('alper').addEventListener('click', () => audioFiles.alper.play());
-document.getElementById('sude').addEventListener('click', () => audioFiles.sude.play());
-document.getElementById('omer').addEventListener('click', () => audioFiles.omer.play());
+function stopAllAudio() {
+    for (let audio in audioFiles) {
+        audioFiles[audio].pause();
+        audioFiles[audio].currentTime = 0; // Reset audio to the start
+    }
+}
+
+// Set initial volume for all audio
+const volumeControl = document.getElementById('volume');
+volumeControl.addEventListener('input', (e) => {
+    const volume = e.target.value;
+    for (let audio in audioFiles) {
+        audioFiles[audio].volume = volume;
+    }
+});
+
+// Set volume and event listeners for buttons
+document.getElementById('alper').addEventListener('click', () => {
+    stopAllAudio();
+    audioFiles.alper.play();
+});
+
+document.getElementById('sude').addEventListener('click', () => {
+    stopAllAudio();
+    audioFiles.sude.play();
+});
+
+document.getElementById('omer').addEventListener('click', () => {
+    stopAllAudio();
+    audioFiles.omer.play();
+});
