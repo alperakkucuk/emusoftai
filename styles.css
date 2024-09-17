@@ -209,3 +209,46 @@ body {
         font-size: 0.75rem;
     }
 }
+
+/* Diğer CSS kodları aynı kalacak */
+
+.qr-section-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem; /* Kutular arasındaki boşluk azaltıldı */
+    flex-wrap: wrap;
+}
+
+.qr-section {
+    text-align: center;
+    margin: 2.5rem auto;
+    padding: 1.25rem;
+    max-width: 18.75rem;
+    background-color: #2b2b3c;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.4);
+}
+
+.qr-section h2 {
+    font-size: 1.375rem;
+    margin-bottom: 0.625rem;
+    color: #ffffff;
+}
+
+.qr-code {
+    width: 12.5rem;
+    height: 12.5rem;
+    margin: 0.625rem 0;
+}
+
+.qr-section p {
+    font-size: 0.875rem;
+    color: #dddddd;
+}
+
+/* Mobil uyum */
+@media (max-width: 768px) {
+    .qr-section-container {
+        flex-direction: column;
+    }
+}
