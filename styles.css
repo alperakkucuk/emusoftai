@@ -1,125 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #1e1e2f;
+    color: #ffffff;
     margin: 0;
-    overflow: hidden;
+    padding: 0;
+    font-size: 16px; /* Temel font büyüklüğü */
+}
+
+.header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    height: 100vh;
-    background: #121212;
-    font-family: 'Arial', sans-serif;
+    padding: 1.25rem;
+    background-color: #2b2b3c;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.5);
+    position: relative;
+    border-bottom: 0.125rem solid #444455;
+    flex-wrap: wrap;
+}
+
+.logo {
+    height: 5rem;
+}
+
+.left {
+    position: absolute;
+    left: 1.25rem;
+}
+
+.right {
+    position: absolute;
+    right: 1.25rem;
+}
+
+.title {
+    text-align: center;
+    flex: 1;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: #ffffff;
 }
 
-.container {
-    z-index: 10;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: #f0e68c;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-}
-
-.countdown {
-    font-size: 3.5rem;
-    font-weight: bold;
-    color: #00e6e6;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
-    background: linear-gradient(90deg, #f0e68c, #00e6e6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: glow 2s infinite alternate;
-}
-
-@keyframes glow {
-    0% {
-        text-shadow: 0 0 10px #00e6e6, 0 0 20px #00e6e6, 0 0 30px #00e6e6;
-    }
-    100% {
-        text-shadow: 0 0 20px #f0e68c, 0 0 30px #f0e68c, 0 0 40px #f0e68c;
-    }
-}
-
-.buttons {
-    margin-top: 20px;
+.language-switch {
+    position: relative;
+    margin-left: auto;
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    gap: 0.625rem;
+    margin-right: 16.875rem;
 }
 
-.btn {
-    padding: 10px 20px;
+.lang-btn {
+    background: #00b4d8;
     border: none;
-    border-radius: 5px;
-    background: #00e6e6;
-    color: #121212;
-    font-size: 1rem;
+    border-radius: 1.25rem;
     cursor: pointer;
-    transition: background 0.3s, transform 0.3s;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    color: #ffffff;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-weight: 500;
+    outline: none;
 }
 
-.btn:hover {
-    background: #f0e68c;
-    transform: scale(1.1);
+.lang-btn:hover {
+    background-color: #0096c7;
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 150, 199, 0.4);
 }
 
-.volume-control {
-    margin-top: 20px;
+.lang-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 0.125rem 0.3125rem rgba(0, 150, 199, 0.2);
+}
+
+.stats-container {
     display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    color: #f0e68c;
+    margin: 1.25rem 0.9375rem;
+    padding-bottom: 6.25rem;
 }
 
-.balloons {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-.balloon {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.7;
-    animation: float 6s infinite ease-in-out;
-    pointer-events: none;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
-}
-
-
-.small-timer {
-    margin-top: 30px;
+.stat-item {
+    background-color: #333344;
+    border-radius: 0.625rem;
+    padding: 1.25rem;
     text-align: center;
-    font-size: 1rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
+    flex: 1;
+    min-width: 9.375rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 4.375rem;
 }
 
-.small {
-    font-size: 2rem;
-    color: #ff6347; /* Farklı bir renk ile küçük sayaç */
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+.icon {
+    font-size: 3.125rem;
+    margin-bottom: 0.625rem;
+    color: #ffffff;
 }
 
-.small-timer h2 {
-    color: #ff6347;
-    margin-bottom: 10px;
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #00b4d8;
+    margin-bottom: 0.3125rem;
 }
 
+.stat-text {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: #cccccc;
+}
+
+.qr-section {
+    text-align: center;
+    margin: 2.5rem auto;
+    padding: 1.25rem;
+    max-width: 18.75rem;
+    background-color: #2b2b3c;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.4);
+}
+
+.qr-section h2 {
+    font-size: 1.375rem;
+    margin-bottom: 0.625rem;
+    color: #ffffff;
+}
+
+.qr-code {
+    width: 12.5rem;
+    height: 12.5rem;
+    margin: 0.625rem 0;
+}
+
+.qr-section p {
+    font-size: 0.875rem;
+    color: #dddddd;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 0.625rem;
+        align-items: center;
+    }
+
+    .left, .right {
+        position: static;
+        margin-bottom: 0.625rem;
+    }
+
+    .title {
+        font-size: 1.25rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .language-switch {
+        margin-top: 0.625rem;
+        justify-content: center;
+        margin-right: 0;
+    }
+
+    .lang-btn {
+        font-size: 0.75rem;
+        padding: 0.3125rem 0.625rem;
+    }
+
+    .stats-container {
+        gap: 0.625rem;
+        padding-bottom: 3.125rem;
+    }
+
+    .stat-item {
+        min-width: 7.5rem;
+        padding: 0.9375rem;
+    }
+
+    .icon {
+        font-size: 2.5rem;
+    }
+
+    .stat-number {
+        font-size: 1.375rem;
+    }
+
+    .qr-section {
+        max-width: 90%;
+        padding: 0.9375rem;
+    }
+
+    .qr-code {
+        width: 9.375rem;
+        height: 9.375rem;
+    }
+
+    .qr-section h2 {
+        font-size: 1.125rem;
+    }
+
+    .qr-section p {
+        font-size: 0.75rem;
+    }
+}
