@@ -1,34 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>İstatistikler</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="balloons"></div>
-    <div class="container">
-        <h1>Agalar Reunion</h1>
-        <div id="countdown" class="countdown"></div>
-        <div class="buttons">
-            <button class="btn" id="alper">Alper</button>
-            <button class="btn" id="sude">Sude</button>
-            <button class="btn" id="omer">Ömer</button>
+    <header class="header">
+        <img src="logo.png" style="width: 140px; height: 140px;" alt="Kulüp Logosu" class="logo left">
+        <h1 class="title" id="club-name">Yazılım ve Yapay Zeka Geliştirme Kulübü</h1>
+        <img src="daulogo.png" alt="DAÜ Logosu" class="logo right">
+        <div class="language-switch">
+            <button class="lang-btn" id="tr-btn">TR</button>
+            <button class="lang-btn" id="en-btn">EN</button>
         </div>
-        <div class="volume-control">
-            <label for="volume">Ses Seviyesi: </label>
-            <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
-        </div>
+    </header>
 
-        <!-- Yeni Sayaç ve Buton -->
-        <div class="small-timer">
-            <h2>Otkar is Coming</h2>
-            <div id="small-countdown" class="countdown small"></div>
-            <button class="btn" id="otkar">Otkar</button>
+    <div class="stats-container">
+        <div class="stat-item">
+            <p class="icon">📅</p>
+            <span class="stat-number" data-target="20">0</span>
+            <p class="stat-text" data-tr="Etkinlik Sayısı" data-en="Number of Events">Etkinlik Sayısı</p>
+        </div>
+        <div class="stat-item">
+            <p class="icon">👥</p>
+            <span class="stat-number" data-target="5200">0</span>
+            <p class="stat-text" data-tr="Etkinliklere Katılım Sayısı" data-en="Event Participation">Etkinliklere Katılım Sayısı</p>
+        </div>
+        <div class="stat-item">
+            <p class="icon">🧑‍💻</p>
+            <span class="stat-number" data-target="621">0</span>
+            <p class="stat-text" data-tr="Üye Sayısı" data-en="Number of Members">Üye Sayısı</p>
+        </div>
+        <div class="stat-item">
+            <p class="icon">🗂️</p>
+            <span class="stat-number" data-target="12">0</span>
+            <p class="stat-text" data-tr="Staj İmkanı Sayısı" data-en="Internship Opportunities">Staj İmkanı Sayısı</p>
+        </div>
+        <div class="stat-item">
+            <p class="icon">🏅</p>
+            <span class="stat-number" data-target="2400">0</span>
+            <p class="stat-text" data-tr="Sertifika Sayısı" data-en="Certificates Awarded">Sertifika Sayısı</p>
+        </div>
+        <div class="stat-item">
+            <p class="icon">📜</p>
+            <span class="stat-number" data-target="1200">0</span>
+            <p class="stat-text" data-tr="Katılım Belgesi Sayısı" data-en="Participation Certificates">Katılım Belgesi Sayısı</p>
         </div>
     </div>
+
+    <!-- QR Code Section -->
+    <div class="qr-section">
+        <h2 class="qr-title" data-tr="WhatsApp Grubumuza Katıl" data-en="Join Our WhatsApp Group">WhatsApp Grubumuza Katıl</h2>
+        <img src="qr.png" alt="WhatsApp Grubu QR Kodu" class="qr-code">
+        <p class="qr-text" data-tr="QR kodu tarayarak grubumuza katılabilirsiniz!" data-en="Scan the QR code to join our group!">QR kodu tarayarak grubumuza katılabilirsiniz!</p>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
