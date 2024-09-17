@@ -2,11 +2,10 @@ const counters = document.querySelectorAll('.stat-number');
 const trBtn = document.getElementById('tr-btn');
 const enBtn = document.getElementById('en-btn');
 
-
 const statTexts = document.querySelectorAll('.stat-text');
 const clubName = document.getElementById('club-name');
-const qrTitle = document.querySelector('.qr-title');
-const qrText = document.querySelector('.qr-text');
+const qrTitles = document.querySelectorAll('.qr-title'); // Tüm QR başlıklarını seçiyoruz
+const qrTexts = document.querySelectorAll('.qr-text'); // Tüm QR açıklamalarını seçiyoruz
 
 // Sayıları animasyonla arttırma fonksiyonu
 counters.forEach(counter => {
@@ -34,8 +33,12 @@ trBtn.addEventListener('click', () => {
         text.innerText = text.getAttribute('data-tr');
     });
     clubName.innerText = 'Yazılım ve Yapay Zeka Geliştirme Kulübü';
-    qrTitle.innerText = qrTitle.getAttribute('data-tr');
-    qrText.innerText = qrText.getAttribute('data-tr');
+    qrTitles.forEach(title => {
+        title.innerText = title.getAttribute('data-tr'); // Tüm QR başlıklarını güncelle
+    });
+    qrTexts.forEach(text => {
+        text.innerText = text.getAttribute('data-tr'); // Tüm QR açıklamalarını güncelle
+    });
 });
 
 // İngilizce butonuna tıklandığında metinleri İngilizce'ye çevir
@@ -44,6 +47,10 @@ enBtn.addEventListener('click', () => {
         text.innerText = text.getAttribute('data-en');
     });
     clubName.innerText = 'Software and Artificial Intelligence Development Club';
-    qrTitle.innerText = qrTitle.getAttribute('data-en');
-    qrText.innerText = qrText.getAttribute('data-en');
+    qrTitles.forEach(title => {
+        title.innerText = title.getAttribute('data-en'); // Tüm QR başlıklarını güncelle
+    });
+    qrTexts.forEach(text => {
+        text.innerText = text.getAttribute('data-en'); // Tüm QR açıklamalarını güncelle
+    });
 });
